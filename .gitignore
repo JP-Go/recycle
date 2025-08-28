@@ -1,0 +1,2 @@
+backend/sqlc.yaml
+backend/db/migrations/tern*.conf
