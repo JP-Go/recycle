@@ -5,8 +5,8 @@ all: build test
 
 build:
 	@echo "Building..."
-	
-	
+
+
 	@go build -o main cmd/api/main.go
 
 # Run the application
@@ -60,5 +60,39 @@ watch:
                 exit 1; \
             fi; \
         fi
+# Do database migrations
+migrate:
+	@if command -v tern > /dev/null; then \
+           	set -a ; \
+           	source ./.env; \
+            echo ${DB_HOST}; \
+            echo ${DB_DATABASE}; \
+    		pushd db/migrations/; \
+    		tern migrate; \
+            popd; \
+           	set +a ;\
+		else \
+		read -p "Tern is not installed on your machine. Would you like to install it? [Y/n] " choice; \
+		if [ "$$choice" != "n" ] && [ "$$choice" != "N" ]; then \
+                go install github.com/jackc/tern@latest; \
+               	source ./.env; \
+                echo ${DB_HOST}; \
+          		pushd db/migrations/; \
+          		tern migrate; \
+                popd; \
+                echo "Migrated database successfully.";\
+            else \
+                echo "You chose not to install air. Exiting..."; \
+                exit 1; \
+            fi; \
+        fi; \
+       	DB_HOST= \
+       	DB_USERNAME= \
+       	DB_PASSWORD= \
+       	DB_DATABASE= \
+       	DB_PORT= \
+       	DB_SCHEMA= \
 
-.PHONY: all build run test clean watch docker-run docker-down itest
+
+
+.PHONY: all build run test clean watch docker-run docker-down itest migrate env

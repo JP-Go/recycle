@@ -1,6 +1,6 @@
 CREATE TABLE company (
     id uuid primary key,
-    name varchar not null, 
+    name varchar not null,
     company_owner_id uuid not null,
 
     created_at timestampz not null default CURRENT_TIMESTAMP,
@@ -8,7 +8,7 @@ CREATE TABLE company (
     deleted_at timestampz
     created_by uuid not null,
     updated_by uuid not null
-)
+);
 
 CREATE TABLE user(
     id uuid primary key,
