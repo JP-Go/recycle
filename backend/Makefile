@@ -7,7 +7,7 @@ build:
 	@echo "Building..."
 	
 	
-	@CGO_ENABLED=1 GOOS=linux go build -o main cmd/api/main.go
+	@go build -o main cmd/api/main.go
 
 # Run the application
 run:
@@ -34,6 +34,10 @@ docker-down:
 test:
 	@echo "Testing..."
 	@go test ./... -v
+# Integrations Tests for the application
+itest:
+	@echo "Running integration tests..."
+	@go test ./internal/database -v
 
 # Clean the binary
 clean:
@@ -57,4 +61,4 @@ watch:
             fi; \
         fi
 
-.PHONY: all build run test clean watch
+.PHONY: all build run test clean watch docker-run docker-down itest
