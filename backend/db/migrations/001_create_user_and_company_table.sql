@@ -1,6 +1,6 @@
-CREATE SCHEMA {{.schema}};
+CREATE SCHEMA recycle;
 
-CREATE TABLE {{.schema}}.user(
+CREATE TABLE recycle.user(
     id uuid primary key,
     email varchar not null,
     hashed_password varchar not null,
@@ -14,10 +14,10 @@ CREATE TABLE {{.schema}}.user(
     updated_by uuid not null
 );
 
-CREATE TABLE {{.schema}}.company (
+CREATE TABLE recycle.company (
     id uuid primary key,
     name varchar not null,
-    company_owner_id uuid references {{.schema}}.user(id) not null,
+    company_owner_id uuid references recycle.user(id) not null,
 
     created_at timestamp with time zone not null default CURRENT_TIMESTAMP,
     updated_at timestamp with time zone not null default CURRENT_TIMESTAMP,
@@ -28,6 +28,6 @@ CREATE TABLE {{.schema}}.company (
 
 ---- create above / drop below ----
 
-drop table {{.schema}}.company;
-drop table {{.schema}}.user;
-drop schema {{.schema}} cascade;
+drop table recycle.company;
+drop table recycle.user;
+drop schema recycle cascade;
