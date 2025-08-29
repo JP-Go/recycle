@@ -65,8 +65,6 @@ migrate:
 	@if command -v tern > /dev/null; then \
            	set -a ; \
            	source ./.env; \
-            echo ${DB_HOST}; \
-            echo ${DB_DATABASE}; \
     		pushd db/migrations/; \
     		tern migrate; \
             popd; \
@@ -75,14 +73,14 @@ migrate:
 		read -p "Tern is not installed on your machine. Would you like to install it? [Y/n] " choice; \
 		if [ "$$choice" != "n" ] && [ "$$choice" != "N" ]; then \
                 go install github.com/jackc/tern@latest; \
+               	set -a ; \
                	source ./.env; \
-                echo ${DB_HOST}; \
-          		pushd db/migrations/; \
-          		tern migrate; \
+        		pushd db/migrations/; \
+        		tern migrate; \
                 popd; \
-                echo "Migrated database successfully.";\
+               	set +a ;\
             else \
-                echo "You chose not to install air. Exiting..."; \
+                echo "You chose not to install tern. Exiting..."; \
                 exit 1; \
             fi; \
         fi; \
@@ -91,8 +89,35 @@ migrate:
        	DB_PASSWORD= \
        	DB_DATABASE= \
        	DB_PORT= \
-       	DB_SCHEMA= \
+       	DB_SCHEMA=
+migrate-down:
+	@if command -v tern > /dev/null; then \
+                   	set -a ; \
+                   	source ./.env; \
+            		pushd db/migrations/; \
+            		tern migrate -d -1; \
+                    popd; \
+                   	set +a ;\
+		else \
+		read -p "Tern is not installed on your machine. Would you like to install it? [Y/n] " choice; \
+		if [ "$$choice" != "n" ] && [ "$$choice" != "N" ]; then \
+                        go install github.com/jackc/tern@latest; \
+                       	set -a ; \
+                       	source ./.env; \
+                		pushd db/migrations/; \
+                		tern migrate -d -1; \
+                        popd; \
+                       	set +a ;\
+                    else \
+                        echo "You chose not to install tern. Exiting..."; \
+                        exit 1; \
+                    fi; \
+                fi; \
+               	DB_HOST= \
+               	DB_USERNAME= \
+               	DB_PASSWORD= \
+               	DB_DATABASE= \
+               	DB_PORT= \
+               	DB_SCHEMA=
 
-
-
-.PHONY: all build run test clean watch docker-run docker-down itest migrate env
+.PHONY: all build run test clean watch docker-run docker-down itest migrate migrate-down

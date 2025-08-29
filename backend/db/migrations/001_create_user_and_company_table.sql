@@ -5,6 +5,7 @@ CREATE TABLE recycle.user(
     email varchar not null,
     hashed_password varchar not null,
     confirmed_at timestamp with time zone,
+    confirmation_token varchar,
     role varchar not null,
 
     created_at timestamp with time zone not null default CURRENT_TIMESTAMP,
