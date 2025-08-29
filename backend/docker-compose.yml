@@ -22,7 +22,7 @@ services:
     networks:
       - backend
   recycle_db:
-    image: postgres:latest
+    image: postgres:17-alpine
     restart: unless-stopped
     environment:
       POSTGRES_DB: ${DB_DATABASE}
