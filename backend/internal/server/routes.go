@@ -11,6 +11,8 @@ func (s *Server) RegisterRoutes() http.Handler {
 	e := echo.New()
 	e.Use(middleware.Logger())
 	e.Use(middleware.Recover())
+	e.Use(middleware.AddTrailingSlash())
+	e.Use(middleware.CSRF())
 
 	e.Use(middleware.CORSWithConfig(middleware.CORSConfig{
 		AllowOrigins:     []string{"https://*", "http://*"},
@@ -22,8 +24,6 @@ func (s *Server) RegisterRoutes() http.Handler {
 
 	e.GET("/", s.HelloWorldHandler)
 
-	e.GET("/health", s.healthHandler)
-
 	return e
 }
 
@@ -33,8 +33,4 @@ func (s *Server) HelloWorldHandler(c echo.Context) error {
 	}
 
 	return c.JSON(http.StatusOK, resp)
-}
-
-func (s *Server) healthHandler(c echo.Context) error {
-	return c.JSON(http.StatusOK, s.db.Health())
 }

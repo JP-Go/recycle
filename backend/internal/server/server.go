@@ -9,21 +9,20 @@ import (
 
 	_ "github.com/joho/godotenv/autoload"
 
-	"backend/internal/database"
+	database "backend/internal/database/postgresql"
 )
 
 type Server struct {
 	port int
 
-	db database.Service
+	queries *database.Queries
 }
 
-func NewServer() *http.Server {
+func NewServer(queries *database.Queries) *http.Server {
 	port, _ := strconv.Atoi(os.Getenv("PORT"))
 	NewServer := &Server{
-		port: port,
-
-		db: database.New(),
+		port:    port,
+		queries: queries,
 	}
 
 	// Declare Server config
