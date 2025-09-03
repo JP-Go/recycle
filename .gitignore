@@ -1,4 +1,3 @@
-backend/sqlc.yaml
 backend/db/migrations/tern*.conf
 **/.env
 **/.env.fish

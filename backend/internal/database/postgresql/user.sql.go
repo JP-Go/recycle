@@ -8,6 +8,7 @@ package database
 import (
 	"context"
 
+	"github.com/google/uuid"
 	"github.com/jackc/pgx/v5/pgtype"
 )
 
@@ -16,9 +17,9 @@ UPDATE recycle.user SET confirmed_at = $2, updated_at = now(), updated_by = $3 W
 `
 
 type ConfirmUserAccessParams struct {
-	ID          pgtype.UUID
+	ID          uuid.UUID
 	ConfirmedAt pgtype.Timestamptz
-	UpdatedBy   pgtype.UUID
+	UpdatedBy   uuid.UUID
 }
 
 func (q *Queries) ConfirmUserAccess(ctx context.Context, arg ConfirmUserAccessParams) error {
@@ -33,13 +34,13 @@ RETURNING id, email, hashed_password, confirmed_at, confirmation_token, role, cr
 `
 
 type CreateUserParams struct {
-	ID                pgtype.UUID
+	ID                uuid.UUID
 	Email             string
 	HashedPassword    string
 	ConfirmationToken pgtype.Text
 	Role              string
-	CreatedBy         pgtype.UUID
-	UpdatedBy         pgtype.UUID
+	CreatedBy         uuid.UUID
+	UpdatedBy         uuid.UUID
 }
 
 func (q *Queries) CreateUser(ctx context.Context, arg CreateUserParams) (RecycleUser, error) {
@@ -74,7 +75,7 @@ SELECT id, email, hashed_password, confirmed_at, confirmation_token, role, creat
 FROM recycle.user WHERE id = $1
 `
 
-func (q *Queries) FindUserById(ctx context.Context, id pgtype.UUID) (RecycleUser, error) {
+func (q *Queries) FindUserById(ctx context.Context, id uuid.UUID) (RecycleUser, error) {
 	row := q.db.QueryRow(ctx, findUserById, id)
 	var i RecycleUser
 	err := row.Scan(

@@ -8,7 +8,7 @@ package database
 import (
 	"context"
 
-	"github.com/jackc/pgx/v5/pgtype"
+	"github.com/google/uuid"
 )
 
 const createCompany = `-- name: CreateCompany :one
@@ -18,11 +18,11 @@ RETURNING id, name, company_owner_id, created_at, updated_at, deleted_at, create
 `
 
 type CreateCompanyParams struct {
-	ID             pgtype.UUID
+	ID             uuid.UUID
 	Name           string
-	CompanyOwnerID pgtype.UUID
-	CreatedBy      pgtype.UUID
-	UpdatedBy      pgtype.UUID
+	CompanyOwnerID uuid.UUID
+	CreatedBy      uuid.UUID
+	UpdatedBy      uuid.UUID
 }
 
 func (q *Queries) CreateCompany(ctx context.Context, arg CreateCompanyParams) (RecycleCompany, error) {
@@ -61,7 +61,7 @@ type FindCompanyByIdRow struct {
 	RecycleUser    RecycleUser
 }
 
-func (q *Queries) FindCompanyById(ctx context.Context, id pgtype.UUID) (FindCompanyByIdRow, error) {
+func (q *Queries) FindCompanyById(ctx context.Context, id uuid.UUID) (FindCompanyByIdRow, error) {
 	row := q.db.QueryRow(ctx, findCompanyById, id)
 	var i FindCompanyByIdRow
 	err := row.Scan(

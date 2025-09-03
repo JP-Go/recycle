@@ -12,7 +12,7 @@ func (s *Server) RegisterRoutes() http.Handler {
 	e.Use(middleware.Logger())
 	e.Use(middleware.Recover())
 	e.Use(middleware.AddTrailingSlash())
-	e.Use(middleware.CSRF())
+	// e.Use(middleware.CSRF())
 
 	e.Use(middleware.CORSWithConfig(middleware.CORSConfig{
 		AllowOrigins:     []string{"https://*", "http://*"},
@@ -24,6 +24,7 @@ func (s *Server) RegisterRoutes() http.Handler {
 
 	e.GET("/", s.HelloWorldHandler)
 
+	s.RegisterUserRoutes(e)
 	return e
 }
 

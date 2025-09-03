@@ -9,7 +9,11 @@ import (
 	"syscall"
 	"time"
 
+	database "backend/internal/database/postgresql"
 	"backend/internal/server"
+
+	"github.com/jackc/pgx/v5/pgxpool"
+	_ "github.com/joho/godotenv/autoload"
 )
 
 func gracefulShutdown(apiServer *http.Server, done chan bool) {
@@ -34,13 +38,18 @@ func gracefulShutdown(apiServer *http.Server, done chan bool) {
 
 func main() {
 
-	server := server.NewServer()
+	dbPool, err := pgxpool.New(context.Background(), "")
+	if err != nil {
+		panic(err)
+	}
+	queries := database.New(dbPool)
+	server := server.NewServer(queries)
 
 	done := make(chan bool, 1)
 
 	go gracefulShutdown(server, done)
 
-	err := server.ListenAndServe()
+	err = server.ListenAndServe()
 	if err != nil && err != http.ErrServerClosed {
 		panic(fmt.Sprintf("http server error: %s", err))
 	}

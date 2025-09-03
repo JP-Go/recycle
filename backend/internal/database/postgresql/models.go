@@ -5,22 +5,23 @@
 package database
 
 import (
+	"github.com/google/uuid"
 	"github.com/jackc/pgx/v5/pgtype"
 )
 
 type RecycleCompany struct {
-	ID             pgtype.UUID
+	ID             uuid.UUID
 	Name           string
-	CompanyOwnerID pgtype.UUID
+	CompanyOwnerID uuid.UUID
 	CreatedAt      pgtype.Timestamptz
 	UpdatedAt      pgtype.Timestamptz
 	DeletedAt      pgtype.Timestamptz
-	CreatedBy      pgtype.UUID
-	UpdatedBy      pgtype.UUID
+	CreatedBy      uuid.UUID
+	UpdatedBy      uuid.UUID
 }
 
 type RecycleUser struct {
-	ID                pgtype.UUID
+	ID                uuid.UUID
 	Email             string
 	HashedPassword    string
 	ConfirmedAt       pgtype.Timestamptz
@@ -29,6 +30,6 @@ type RecycleUser struct {
 	CreatedAt         pgtype.Timestamptz
 	UpdatedAt         pgtype.Timestamptz
 	DeletedAt         pgtype.Timestamptz
-	CreatedBy         pgtype.UUID
-	UpdatedBy         pgtype.UUID
+	CreatedBy         uuid.UUID
+	UpdatedBy         uuid.UUID
 }
