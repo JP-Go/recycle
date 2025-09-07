@@ -70,6 +70,30 @@ func (q *Queries) CreateUser(ctx context.Context, arg CreateUserParams) (Recycle
 	return i, err
 }
 
+const findUserByEmail = `-- name: FindUserByEmail :one
+SELECT id, email, hashed_password, confirmed_at, confirmation_token, role, created_at, updated_at, deleted_at, created_by, updated_by
+FROM recycle.user WHERE email = $1
+`
+
+func (q *Queries) FindUserByEmail(ctx context.Context, email string) (RecycleUser, error) {
+	row := q.db.QueryRow(ctx, findUserByEmail, email)
+	var i RecycleUser
+	err := row.Scan(
+		&i.ID,
+		&i.Email,
+		&i.HashedPassword,
+		&i.ConfirmedAt,
+		&i.ConfirmationToken,
+		&i.Role,
+		&i.CreatedAt,
+		&i.UpdatedAt,
+		&i.DeletedAt,
+		&i.CreatedBy,
+		&i.UpdatedBy,
+	)
+	return i, err
+}
+
 const findUserById = `-- name: FindUserById :one
 SELECT id, email, hashed_password, confirmed_at, confirmation_token, role, created_at, updated_at, deleted_at, created_by, updated_by
 FROM recycle.user WHERE id = $1

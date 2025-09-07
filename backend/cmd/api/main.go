@@ -5,11 +5,12 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"os"
 	"os/signal"
 	"syscall"
 	"time"
 
-	database "backend/internal/database/postgresql"
+	"backend/internal/infra/database"
 	"backend/internal/server"
 
 	"github.com/jackc/pgx/v5/pgxpool"
@@ -38,7 +39,15 @@ func gracefulShutdown(apiServer *http.Server, done chan bool) {
 
 func main() {
 
-	dbPool, err := pgxpool.New(context.Background(), "")
+	dbPool, err := pgxpool.New(context.Background(),
+		fmt.Sprintf("postgresql://%s:%s@%s:%s/%s",
+			os.Getenv("DB_USERNAME"),
+			os.Getenv("DB_PASSWORD"),
+			os.Getenv("DB_HOST"),
+			os.Getenv("DB_PORT"),
+			os.Getenv("DB_DATABASE"),
+		),
+	)
 	if err != nil {
 		panic(err)
 	}

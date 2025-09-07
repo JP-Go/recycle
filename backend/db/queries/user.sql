@@ -9,3 +9,7 @@ UPDATE recycle.user SET confirmed_at = $2, updated_at = now(), updated_by = $3 W
 -- name: FindUserById :one
 SELECT id, email, hashed_password, confirmed_at, confirmation_token, role, created_at, updated_at, deleted_at, created_by, updated_by
 FROM recycle.user WHERE id = $1;
+
+-- name: FindUserByEmail :one
+SELECT id, email, hashed_password, confirmed_at, confirmation_token, role, created_at, updated_at, deleted_at, created_by, updated_by
+FROM recycle.user WHERE email = $1;

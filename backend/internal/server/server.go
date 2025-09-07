@@ -9,20 +9,25 @@ import (
 
 	_ "github.com/joho/godotenv/autoload"
 
-	database "backend/internal/database/postgresql"
+	"backend/internal/application/services"
+	"backend/internal/application/usecases"
+	"backend/internal/infra/database"
 )
 
 type Server struct {
 	port int
 
-	queries *database.Queries
+	queries           *database.Queries
+	createUserUseCase *usecases.CreateUserUsecase
 }
 
 func NewServer(queries *database.Queries) *http.Server {
 	port, _ := strconv.Atoi(os.Getenv("PORT"))
+	ur := database.NewUserRepository(queries)
 	NewServer := &Server{
-		port:    port,
-		queries: queries,
+		port:              port,
+		queries:           queries,
+		createUserUseCase: usecases.NewCreateUserUsecase(ur, services.NewBcryptHasher(), services.NewUniqueEmailVerifier(ur)),
 	}
 
 	// Declare Server config
